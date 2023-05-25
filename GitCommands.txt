@@ -1,0 +1,346 @@
+1. Creating directory
+- Make new directory/ folder
+command: mkdir NameOfDirectory
+- Initialize a new local empty GIT repository 
+Note: we have to be in the directory first to create GIT repository
+command: git init NameOfDirectory
+
+Note: Difference between git mkdir and git init
+mkdir - creates a plain directory at the given path
+init - will prepare a directory for revision control with history of files for regular commits
+
+2. Navigate through files/ directories
+- Go to directory + going to Modules
+command: cd NameOfDirectory/ Module
+- Go to previous directory/ Module
+command: cd -
+- To the entire system root directory
+command: cd /
+- Returns you to login directory
+command: cd ~
+- Takes you to the parent directory
+command: cd ..
+
+
+3. List files/ directories
+- List all the files and directories
+command: ls
+but if
+command: ls -a
+it will show All files and directories -a == All, now we can see the hidden git repository
+
+- Open the .git hidden folder and see all the branches/configs/obj ...
+command: open .git
+- Remove the git sub directory we are going to lose the repository
+command: rm -rf .git
+
+4. Adding files to directory
+- Make a new file or update timestamp on existing file
+command: touch FileName.Type
+- Print text to  the console or redirect it to a file
+command: echo "Text inside file" > FileName.Type
+
+5. Staging
+Note: Staging area is like a draft from where the files are sent to GitHub
+This draft collect the files that are going to be sent to Github,
+however waits for our conformation to do so! Through it we change our files!
+Example:
+
+(my PC) -> Staging -> GitHub
+          ( file1 )
+          ( file2 )
+       if approved -> Github
+          ( file1 change )
+          ( file2 )
+          approved -> Github
+
+6. Git status + add files to staging
+- See git status of files to the staging area
+command: git status
+- Add these files to the staging area
+command: git add FileName1.Type FileName2.Type
+or
+command: git add *.FilesWithSameType
+or
+to add the whole directory recursively (careful with it) this is the approve from my example
+command: git add .
+
+7. Sent this repository to staging
+- To sent file or anything for that matter we have to be in the directory
+- Committing a file
+command: git commit -m "Short description of the snapshot"
+Explained: -m is for message "where we write the message"
+or
+command: git commit
+this sends us to the default editor that we use and there we write
+a longer discretion when needed
+
+8. Delete file
+- Delete file in directory
+command: rm FileName.Type
+but it still exist in the staging area
+- To see files in staging area
+command: git ls-files
+- To update the changes and to add the deletion of file to the staging area
+command: git add FileName.Type
+now the staging are has also deleted FileName.Type
+- Removing file from directory as well as staging area at the same time
+command: git rm FileName.Type
+or
+command: git rm *.TypesOfFiles
+or
+command: git rm FileName1.Type FileName2.Type
+- Delete a folder == directory or Module
+command: rm -rf FolderName
+
+9. Renaming and moving files
+- To rename file
+command: mv FileName.Type RenamedFile.Type
+
+Explained: mv - move
+Example: mv file1.txt main.java
+- To rename file and sent the inf. to staging area
+command: git mv FileName.Type FileName.Type
+Example: git mv file1.txt main.java
+
+10. Log files
+Note: we do not need to share or synchronise our log files to members of our team
+log files
+
+- no log files in staging area
+command: echo LogFile/ > .gitignore
+or 
+command: touch .gitignore
+
+11. Short Status
+- Short status
+command: git status -s
+- Adding a new file to a existing file
+command: echo NewFileName >> FileName.Type
+- Creating a new file in NO existing file
+command: echo NewFileName > NoExistingFile.Type
+
+Example:
+Lubos-MacBook-Pro:Moon lubodimoff$ echo sky >> file1.txt
+Lubos-MacBook-Pro:Moon lubodimoff$ echo sky > file2.txt
+Lubos-MacBook-Pro:Moon lubodimoff$ git status -s
+ M file1.txt
+A  file2.txt
+
+Meaning:
+Represent the staging area!
+?? - not exciting file
+M - modified, changes are not in the staging area
+A - added not existing file to directory
+D - deleted
+R - renamed
+C - Copied
+U - Updated but unmerged
+
+12. Clone repository
+- clone the repository using the terminal
+command: git clone HTTPS
+
+13. View the stages
+- To see what we have in the staged area
+command: git diff --staged
+- with this command we compare the files
+- to quit the previous command click q
+command: q (END)
+
+14. Viewing history
+- To look at our history in detail
+command: git log
+- To summaries the log information
+command: git log --oneline
+- To reverse the summary from first to last
+command: git log --oneline --reverse
+
+15. View commit in history
+- To view previous commit
+command: git show IndemnificationNumberOfCommit
+or
+command: git show HEAD~HowManyStepToGoBack
+- To see all the files in a commit
+command: git ls-tree HEAD~HowManyStepsToGoBack
+
+16. Unstaging files
+- To undo an add file that would be committed 
+command: git reset FileName.Type
+or
+command: git restore --staged FileName.Type (new versions 2.28.0)
+- To cancel all added files for the commit
+command: git reset . 
+
+
+command: git reset --soft (stage everything)
+or
+command: git reset --mixed (unstage everything)
+or
+command: git reset --hard (DELETE and ignore everything up to the commit)
+
+
+17. Push
+Note: A push is the action of transferring your commits 
+from your local repository to a remote one
+
+command: git push origin master
+or
+command: git push VariableName master
+
+18. Pull
+Note: Is used to receive data from GitHub. It fetches and merges changes on the
+remote server to your working directory
+
+command: git pull URL
+URL - use HTTPS, it is better than SSH
+
+19. Branches
+Note: The "master" branch is the released version of the software at some point
+to add any features, implications and other we need separate branches.
+We need this separate branches to test functionality, fix bugs and after that
+merge them with the "master" branch to release the new version.
+
++Note: We create a branch from our most resent commit, and work on it after that.
+After its ready we merge it with the "master" branch  
+
+- The command lists all the branches available in the repository
+command: git branch
+- See all branches local and remote
+command: git branch -a
+- Create new branch
+command: git branch NameOfNewBranch
+- Delete branch
+command: git branch -d
+- Create new branch and switch to it
+command: git checkout -b NameOfNewBranch
+- Clone branch and switch to it
+command: git branch -b NameOfCloneBranch RemoteRepoURL
+or
+command: git branch -b NameOfCloneBranch origin/RemoteRepoURL
+- Switch branch
+command: git branch -m OldBranchName NewBranchName
+
+20. Merge branches
+- Merge a branch into the active branch
+command: git merge ActiveBranchName
+- Merge a branch into a target branch
+command: git merge BranchName TargetBranchName
+- Instead of committing numerous files you commit all files into one file in history
+command: git merge NameOfBranch.Type --squash
+
+21. Stash
+Note: temporarily shelves or stash changes you have made to your working copy
+so you ca work on something else, and then come back and re-apply them later on,
+without committing it
+- Stash changes in a dirty working directory
+command: git stash
+- To stash untracked files (unadded files) and to clean the directory
+command: git stash -u
+- To get back to work on the untracked files
+command: git stash pop
+- Remove all stashed entries
+commands: git stash clear
+
+22. Push Code to GitHub
+- Find the file that is going to be pushed
+- Will find the present working directory
+command: pwd
+- Change directory
+command: cd
+- Initialises the chose directory as a git repository
+command: git init
+- Adding all the files to the git repo
+command: git add .
+Explained: the . means all files/directories ...
+- Commit all the files to the git repo
+command: git commit -m "..."
+
+Now go to GitHub and copy the repo URL
+
+FIRST CONNECTION:
+Example: HTTPS
+- To add the commit to the GitHub URL
+command: git remote add origin URL
+- After all that we can push the code from our local repository to GitHub
+command: git push -u origin master (master is the branch that you push to)
+* At the end I will be asked for my GitHub name and password
+
+AFTER FIRST CONNECTION:
+- Push 
+command: git push
+- Pull
+command: git pull origin remoteRepoBranchName
+Note: I do not need to provide the URL no more because the connection has already been established with the remote repo
+
+!!!IMPORTANT!!!
+A remote name, for example, origin
+A branch name, for example, main
+For example:
+
+git push REMOTE-NAME BRANCH-NAME
+As an example, you usually run git push origin main to push your local changes to your online repository.
+
++++ To exit a commit without pressing -m 
+command: :wq
+
+
+23. Running Java code in Terminal 
+- To run code in terminal 
+command: javac FileName.Type
+
+24. Solving merge conflict with branches
+
+24.1 Go to directory with git repository
+command: cd Desktop/something/SomeGit
+
+24.2 git push 
+ERROR:
+To https://github.com/LyubomirD/LearningGit.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/LyubomirD/LearningGit.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+24.3 Create new branch to solve the merge conflict
+command: git branch nameOfBranch
+
+24.4 See branches and change to branches
+command: git branch (to see)
+command; git checkout nameOfBranch (to change branches)
+
+24.5 Pull remote repository to new branch to resolve merge conflict
+command: git pull origin remoteRepoBranchName 
+command: leave Shift ZZ
+
+24.6 Solve the merge conflict in the IDE
+
+24.7 After solving the merge conflict
+- need to save changes
+command: git add .
+and 
+command: git commit -m "Merge conflict solve in IDE"
+
+24.8 Merge branches 
+- first go to main branch 
+command: git checkout mainBranchName
+- second tell it which branch to merge main with 
+command: git merge theBranchThatWeSolveTheMergeConflict
+
+24.9 Push the main branch with the solved issue
+command: git push
+
+24.10 Delete if the branch where the conflict was solved
+command: git branch -D nameOfBranch
+
+25. Remove remote repository connection
+command: git remote remove origin
+
+26. Exiting long commit 
+- Exit the commit without saving
+command: :!q
+- Save commit 
+command: :wq

@@ -1,0 +1,320 @@
+1. Create a database
+- CREATE DATABASE nameOfDB;
+
+2. Connected to local DB 
+- psql -d dbName -U userName -W  (in this case lubodimoff)
+Note: "-d" specifies the DB, "-U" specifies the name of user, 
+"-W" forces the psql for password
+
+3. Connect to different host DB
+- psql -h dbAddress -d dbName -U userName -W
+
+4. List all DBs', names, owners ...
+- \l
+
+5. Switch to another database
+- \c dbName
+
+6. List database table
+- \dt
+
+7. Describe a table relationships
+- \d
+find relation
+- \d+ dbtableName
+
+8. List all schemas
+- \dn
+
+9. List users and their roles
+- \du
+retrieve user information
+- \du userName
+
+10. List all functions
+- \df
+
+11. List all view
+- \dv
+
+12. Save query result to a file
+- \o fileName
+
+13. Run commands from a file
+- \i fileName
+
+14. Quit sql
+- \q
+
+15 Clear screen (terminal)
+- control + l (MacOS)
+
+16. Create table
+Note: You have to already in the DB that you want to create table
+- CREATE TABLE nameOfTable;
+or
+- CREATE TABLE nameOfTable(id INT PRIMARY KEY, 
+firstName VARCHAR(50) NOT NULL, lastName VARCHAR(50) NOT NULL);
+
+17. Insert information in table
+- INSERT INTO nameOfTable(id, firstName, LastName) VALUES(1, 'Name', 'Name'); 
+
+18. Alter table data
+- add to the primary key a auto generation
+- ALTER TABLE nameOfTable ALTER id ADD GENERATED ALWAYS AS IDENTITY;
+
+19. Sorting data
+- ASC: Ascending 1, 2, 3, 4, 5...
+- DESC: Descending ...5, 4, 3, 2, 1
+
+example: SELECT * FROM table ORDER BY column ASC;
+
+20. Drop out duplicates 
+Note: this does not erase data if only hides duplicated
+Example: SELECT DISTINCT country_of_birth FROM person ORDER BY country_of_birth;
+
+
+21. WHERE clause
+- filter data
+ 
++ We can use conditions to filter that data, like:
+AND, OR, NOT
+Example: ... WHERE column1 = value1 AND (column4 = value4 OR column2 = value2);
+
+22. Comparison operators
+
+- Arithmetic operators
++, -, *, /, %
+
+- Comparison operators
+=, <, >, <=, >=, <> (not equal to - <>)
+
+- Logical operators 
+ALL, AND, ANY, BETWEEN, EXISTS, IN, LIKE, NOT, OR, SOME
+ALL - TRUE if all of the values meet the condition
+ANY - TRUE if any of the values meet the condition
+BETWEEN - TRUE if the operand is within the range
+EXISTS - TRUE if the subquery returns one or more records
+IN - TRUE if the operand is equal to one of a list of expressions
+LIKE - TRUE if the operand matches a pattern
+SOME - TRUE if any of the values meet the condition
+
+23. LIMIT, OFFSET, FETCH
+- LIMIT the results by a certain value ( from the first value to the value set as the limit)
+syntax: ... LIMIT 10; ( id from 1 - 10) 
+
+- OFFSET will start from the value that is set all the way to the last one
+syntax: ... OFFSET 5; ( id from 6 to the last one)
+
+Example: ... OFFSET 5 LIMIT 5; ( id)
+will show the ids from 6 to 10, because it is offset and has a limit of 5
+
+- FETCH was used before LIMIT was adopted by SQLDBs
+the same command above, but with FETCH
+Example: ... OFFSET 5 FETCH FIRST 5 ROW ONLY;
+
+*We can see that by using FETCH we need to write more, LIMIT saves time
+
+24. IN keyword
+- IN takes an array of values and than returns a query matching the given values
+Example: SELECT * FROM person WHERE country_of_birth IN ('China', 'Russia');
+
+25. BETWEEN keyword
+- takes values between value1 and value2
+Example: SELECT * FROM person WHERE date_of_birth BETWEEN date '2000-01-01' AND '2011-12-12';
+
+26. LIKE keyword 
+- is used to match text to pattern using wild cards
+Example: SELECT * FROM person WHERE email LIKE '%.com';
+% - wild card means any character
+_ - needs to match single characters
+
++ ILIKE - is the same as LIKE however it is not case sensitive
+
+27. GROUP BY
+- group data rows that have a similar values
+Note: GROUP BY is often used with functions like:
+COUNT(), MAX(), MIN(), SUM(), AVG()
+Example: SELECT country_of_birth, COUNT(*) FROM person GROUP BY country_of_birth;
+- we can of course order the information in any way we think it fits
+
+28. HAVING keyword
+- extra filter
+- right after ORDER BY
+Example: SELECT country_of_birth, COUNT(*) FROM person GROUP BY country_of_birth HAVING COUNT(*) > 1 ORDER BY country_of_birth;
+
+29. ROUND()
+- when wanting to round a number
+Example: SELECT ROUND(AVG(price)) FROM car;
+
+30. SUM(), MAX(), MIN(), AVR() ...
+- in the bracket we need to write the row that is going to go throw the function
+Example: SELECT SUM(price) FROM car;
+
+31. Alias
+- when we use a function like round, our column name will take the function name
+this could be confusing, that is why we use the AS keyword
+- after we use a function we write "...ROUND(...)...) AS nameOfNewColumn "
+Example: SELECT *, ROUND(price - (price * .10)) AS ten_percent_off FROM car; 
+
+32. COALESCE()
+- function that is used to handle NULL values
+- it defines the very first value that it comes around
+Example:SELECT COALESCE(email) FROM person;
+        coalesce         
+-------------------------
+ 		    -null * by me 
+ johnwick@gmail.com
+ mweatherup2@i2i.jp
+ 		    -null
+ clammas4@eventbrite.com
+ 		    -null
+ jstokoe6@etsy.com
+ wianizzi7@ifeng.com
+ mcoopman8@jimdo.com
+ 		    -null
+-------------------------
+
+33. NULLIF()
+- function returns NULL if two expressions are equal, otherwise it returns the first expression
+Example: SELECT NULLIF(10, 10); - returns NULL
+,but
+Example: SELECT NULLIF(10,1); - returns 10
+
+34. Timestamp and dates
+- function that we can use is NOW() it gives us a timestamp
+Example: SELECT NOW();
+- give us only date
+Example: SELECT NOW()::DATE;
+- only timestamp
+Example: SELECT NOW()::TIME;
+
+35. Date functions
+-Time/date intervals
+YEAR, MONTHS, DAYS, DOW - days of the week, CENTURY
+
+- Wanting to go back in dates by a specific time - INTERVAL()
+Example: SELECT NOW() - INTERVAL '1 YEAR';
+- to extract date - EXTRACT()
+Example: SELECT EXTRACT(YEAR FROM NOW());
+
+36. Age function
+- to calculate age, past time
+Example: SELECT *, AGE(NOW(), date_of_birth) AS age FROM person;
+
+37. Primary key PK
+- unique identification in a table row
+- in some cases we need two or more PK to identify person/ item
+we can alter the table by adding a primary key
+Example: ALTER TABLE person ADD PRIMARY KEY (id); (*specify the column that gets PK)
+
+38. Unique constraint
+- means that you can have unique values per column (it is different from PK)
+Example: ALTER TABLE person ADD CONSTRAIN unique_email UNIQUE (email);
+or
+Example: ALTER TABLE person ADD UNIQUE (email);
+- the only difference is that the second command, creates a column that postgres  chooses the name of it
+
+39. Check constrain
+- check constrain outputs boolean
+- check constrain makes sure that we add a string that matches
+Example: ALTER TABLE person ADD CONSTRAINT gender_constraint CHECH (gender = 'Female' OR gender = 'Male');
+Note: We can add constrains to column if a column violates the constraints
+
+40. Delete
+- Delete by id
+Example: DELETE FROM person WHERE id = 2;
+- We can delete by any row, however is we type
+DELETE FROM person WHERE gender = 'Male';
+we will delete all males in our table
+- Delete the whole table
+Example: DELETE FROM person;
+
+41. Update 
+- update data
+Example: UPDATE person SET email = 'something' WHERE id = 2;
+Note: remember that we have to use WHERE clause because as DELETE, UPDATE will change the whole table with the same information
+
+42. ON CONFLICT DO NOTHING
+- avoids inserting row as its alternative action
+- avoid duplicates, without running into exception
+Example: INSERT INTO table (a person/ item attributes) VALUES(
+the values match exactly with one person/item we already have)
+ON CONFLICT (row that would run into exception/error PK, UNIQUE CONSTRAINT) DO NOTHING;
+
+43. ON CONFLICT DO UPDATE
+- if conflict emerges in a row that row will be updated with the lates inserted data
+Example: ... ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email;
+
+Example: INSERT INTO person (id, first_name, last_name, date_of_birth, email, country_of_birth) VALUES (3, 'Maryanna','Weatherup', DATE '2005-12-26','mweatherup2@i2i.jp.BG', 'Morocco') ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email, last_name = EXCLUDED.last_name;
+
+44. Foreign keys and joins
+- The FOREIGN KEY constraint is used to prevent actions that would destroy links between tables.
+- A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table. 
+
+Example: update person set car_id = 2 where id = 1;
+Syntax: UPDATE table1 SET column1_id = id_from_table2 WHERE column1_id = id_from_table1;
+
+
+45. Inner joins
+- if two tables have something in common they can create a third table 
+also called inner table 
+
+Example: SELECT * FROM person JOIN car ON person.car_id = car.id; 
+
+46. LEFT JOINS
+- a keyword, which is used to select all rows from the left table and also the matched values between the two tables
+
+Example: SELECT * FROM person LEFT JOIN car ON car.id = person.car_id;
+
+47. Deleting foreign keys
+- We cannot delete information when it is referenced in other table
+- So to delete a column in a table when it referenced somewhere we need to delete the foreign key or the column that reference the PK in the table that we want to delete or its column/row OR we can update the column that is FK that reference the PK to NULL
+
+48. Sequences
+- BIGSERIAL: stores a sequential integer, of the BIGINT data type, that is assigned automatically by the database server when a new row is inserted
+
+- BIGINT: he 64-bit representation of an integer
+
+Note: we can restart sequences with the command: "ALTER SEQUENCE person_id_seq RESTART WITH 7;  (7 is a number of choice to restart the count of the new inserts.
+!!! However be careful because is we reset the count to 1 and we have already a insert with the id of 1 we would get an error. This would not change the id of the present insert, because it could destroy relationships between tables!!!
+
+49. UUID
+- to see all extension write "SELECT * FROM pg_available_extensions;"
+
+- is an extension of the SQL library to download it once write
+"CREATE EXTENSION IF NOT EXISTS "uuid-ossp";" - (uuid-ossp is the extension, it could be different)
+
+- to test does the uuid extension works write,
+Note: every generated uuid must and will be different
+"SELECT uuid_generate_v4();"
+           uuid_generate_v4           
+--------------------------------------
+ a55e96a4-f099-4b79-8393-773acc32b7b5
+
+- UUID is a perfect for an ID
+
+- Benefit of using UUID: unique every time, using PK give us a security layer for exploit, global UUID, ...
+ 
+50. How to use UUIDs and not BIGINT or BIGSERIAL
+Note: we cannot change the type from BIGINT/BIGSERIAL to UUID, or at least I could find. 
+
+Nothing new, just a simple update to make a relation
+"update person set car_uid = '4de2a9d0-87f2-4565-a65f-e5c06f4efc99' where person_uid = '939ac874-3d38-4c47-956f-881ca1c093ba';"
+
+After that to see the relationship: "select * from person 
+relationship-# join car on person.car_uid = car.car_uid;"
+OR 
+"select * from person join car using (car_uid);"
+
+
+
+
+
+
+
+
+
+
+
+
